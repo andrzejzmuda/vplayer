@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Dropdown } from 'react-bootstrap'
+import Video from './Video';
 
 
 class MovieList extends Component {
@@ -10,9 +11,11 @@ class MovieList extends Component {
             movieList:[],
             initSelected: 'Wybierz film',
             selectedMovie: '',
-            // video_url: ''
+            video_url: '',
+            description: ''
         };
-        this.changeMovie = this.changeMovie.bind(this)
+        this.changeMovie = this.changeMovie.bind(this);
+        this.getLink = this.getLink.bind(this);
     };
 
     componentDidMount() {
@@ -30,36 +33,51 @@ class MovieList extends Component {
 
       changeMovie(movie) {
         const target = movie.target;
+        console.log(target)
         const value = target.value;
         const name = target.name;
         const key = target.key;
         this.setState({
             selectedMovie: name,
-            video_url: key
+            video_url: value
         })
         console.log(this.state.selectedMovie)
         console.log(this.state.video_url)
       }
 
+      getLink = (link, description) => {
+          this.setState({
+              video_url: link,
+              description: description
+          })
+          console.log(this.state.video_url)
+          console.log(this.state.description)
+      }
+
     render() {
-        const {movieList} = this.state
+        const {selectedMovie, movieList, initSelected, video_url, description} = this.state;
         return (
-            <Dropdown>
-                <Dropdown.Toggle variant="info" id="dropdown-movies">
-                    {this.state.selectedMovie ? this.state.selectedMovie : this.state.initSelected}
-                </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {movieList.map((movie) =>
-                            <Dropdown.Item
-                                key={movie.id}
-                                value={movie.id}
-                                name={movie.title}
-                                onClick={this.changeMovie}
-                                >{movie.title}
-                    </Dropdown.Item>
-                        )}
-                </Dropdown.Menu>
-            </Dropdown>
+            <div>
+                <Dropdown>
+                    <Dropdown.Toggle variant="info" id="dropdown-movies">
+                        {selectedMovie ? selectedMovie : initSelected}
+                    </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {movieList.map((movie) =>
+                                <Dropdown.Item
+                                    key={movie.id}
+                                    value={movie.video_url}
+                                    name={movie.title}
+                                    // onClick={this.changeMovie}
+                                    onClick={() => this.getLink(movie.video_url, movie.description)}
+                                    >{movie.title}
+                        </Dropdown.Item>
+                            )}
+                    </Dropdown.Menu>
+                </Dropdown>
+                <br />
+                <Video title={selectedMovie} video_url={video_url} description={description}/>
+            </div>
         )
     }
 
