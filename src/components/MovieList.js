@@ -45,8 +45,9 @@ class MovieList extends Component {
         console.log(this.state.video_url)
       }
 
-      getLink = (link, description) => {
+      getLink = (title, link, description) => {
           this.setState({
+              selectedMovie: title,
               video_url: link,
               description: description
           })
@@ -68,8 +69,7 @@ class MovieList extends Component {
                                     key={movie.id}
                                     value={movie.video_url}
                                     name={movie.title}
-                                    // onClick={this.changeMovie}
-                                    onClick={() => this.getLink(movie.video_url, movie.description)}
+                                    onClick={() => this.getLink(movie.title, movie.video_url, movie.description)}
                                     >{movie.title}
                         </Dropdown.Item>
                             )}
